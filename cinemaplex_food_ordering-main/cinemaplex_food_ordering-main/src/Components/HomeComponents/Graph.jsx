@@ -104,8 +104,7 @@ const Graph = () => {
               Today
             </span>
           </Box>
-        </Box>
-
+        </Box> 
         <BarChart
           height={300}
           series={graphData}

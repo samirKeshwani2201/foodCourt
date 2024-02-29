@@ -40,7 +40,6 @@ const adminLogin = async (req, res) => {
     req.session.username = userWithEmail.admin_username
     console.log(req.session.username);
     res.status(200).json({
-
         message: "Welcome Back",
         // username: req.session.username
     });

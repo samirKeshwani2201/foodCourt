@@ -18,18 +18,17 @@ const AddFoodItemModal = ({ closeModal, addFoodItem }) => {
     useFormik({
       initialValues: addItemData,
       validationSchema: addFoodModelSchema,
-      onSubmit: (values, action) => {
-        console.log(values);
-        const finalData = {
-          id:Math.random() * 100,
+      onSubmit: async (values, action) => {
+        const finalData = { 
           category: values.itemCategory,
-          title: values.itemName,
-          price: values.itemPrice,
-          description: values.itemDescription,
-          thumbnail: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
+          dish_name: values.itemName,
+          dish_price: values.itemPrice,
+          dish_description: values.itemDescription,
+          dish_image: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
         };
-
         addFoodItem(finalData);
+        console.log("fckkk",finalData);
+
         closeModal(false);
         toast.success("Item Added Successfully");
         action.resetForm();
@@ -126,9 +125,10 @@ const AddFoodItemModal = ({ closeModal, addFoodItem }) => {
                   onBlur={handleBlur}
                 >
                   <option value={"Select Category"}>Select Category</option>
-                  <option value="food">Food</option>
-                  <option value="ice">Ice</option>
-                  <option value="khana">Khana</option>
+                  <option value="burgers">Burgers</option>
+                  <option value="italian">Italian</option>
+                  <option value="american">American</option>
+                  <option value="mexican">Mexican</option>
                 </select>
               </div>
               {errors.itemCategory && touched.itemCategory ? (
@@ -140,7 +140,6 @@ const AddFoodItemModal = ({ closeModal, addFoodItem }) => {
               <label htmlFor="itemDescription">Description</label>
               <div className="form-control">
                 <textarea
-                  type="text"
                   name="itemDescription"
                   id="itemDescription"
                   placeholder="Enter Description"
@@ -170,7 +169,6 @@ const AddFoodItemModal = ({ closeModal, addFoodItem }) => {
                 />
               </div>
             </div>
-
           </div> */}
           <div className="model-footer">
             <button type="submit" className="modal-saveBtn">

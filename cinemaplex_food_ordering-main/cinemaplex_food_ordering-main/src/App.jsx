@@ -14,13 +14,11 @@ import RootLayout from "./Pages/RootLayout/RootLayout";
 
 function App() {
   const [userLogin, setUserLogin] = useState(false);
-
   const router = createBrowserRouter([
     {
       path: "/",
       element: <RootLayout />,
       id: "root",
-
       children: [
         { index: true, element: <Home /> },
         { path: "fooditem", element: <FoodItem /> },
@@ -33,6 +31,7 @@ function App() {
       element: <SignIn />,
     },
   ]);
+  
   return <RouterProvider router={router} />;
 }
 

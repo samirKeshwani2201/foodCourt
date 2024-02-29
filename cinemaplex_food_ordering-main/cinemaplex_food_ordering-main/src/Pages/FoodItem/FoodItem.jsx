@@ -12,7 +12,6 @@ import EditFoodItemModel from "../../Components/EditFoodItemModal/EditFoodItemMo
 import { ShimmerTable, ShimmerTitle } from "react-shimmer-effects";
 import toast from "react-hot-toast";
 const FoodItem = () => {
-  
   const [foodData, setFoodData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,9 +37,17 @@ const FoodItem = () => {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      const response = await axios.get("https://dummyjson.com/products");
-      setFoodData(response.data.products);
-      setFilterData(response.data.products);
+      const response = await axios.get(
+        "http://localhost:8080/api/admin/allDishes"
+      );
+      console.log("First time load", response.data);
+      const data = response.data;
+      const mergedData = data.map((item) => {
+        return { ...item, category: item.category.category_name };
+      });
+      console.log("Merged ", mergedData);
+      setFoodData(mergedData);
+      setFilterData(mergedData);
       setLoading(false);
     };
 
@@ -49,7 +56,6 @@ const FoodItem = () => {
 
   function addNewFoodItem(data) {
     setFilterData(filterData.concat(data));
-    
   }
 
   function updateFoodItem(data) {
@@ -74,6 +80,14 @@ const FoodItem = () => {
     ) {
       setCurrentPage(pagenumber);
     }
+  };
+
+  const handleDelete = async (id) => {
+    console.log(id);
+    const response = await axios.delete(
+      `http://localhost:8080/api/admin/Dishes/${id}`
+    );
+    console.log("deleted sdvmfis");
   };
 
   return loading ? (
@@ -108,7 +122,7 @@ const FoodItem = () => {
               setSearchText(event.target.value);
               setFilterData(
                 foodData.filter((data) =>
-                  data.title.toLowerCase().includes(event.target.value)
+                  data.dish_name.toLowerCase().includes(event.target.value)
                 )
               );
               setCurrentPage(1);
@@ -153,17 +167,16 @@ const FoodItem = () => {
               </thead>
               <tbody>
                 {console.log(foodData)}
-
                 {currentPosts.map((item, i) => {
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.dish_id}>
                       <td>
-                        <img src={item.thumbnail} alt={item.title} />
+                        <img src={item.dish_image} alt={item.dish_name} />
                       </td>
-                      <td>{item.title}</td>
+                      <td>{item.dish_name}</td>
                       <td>{item.category}</td>
-                      <td>${item.price}</td>
-                      <td>{item.description}</td>
+                      <td>${item.dish_price}</td>
+                      <td>{item.dish_description}</td>
                       <td>
                         <div className="fooditems-actions">
                           <span
@@ -185,12 +198,14 @@ const FoodItem = () => {
                               );
 
                               if (action) {
+
                                 // setToBeDeleted(item.id)
                                 setFilterData(
                                   filterData.filter(
-                                    (data) => data.id != item.id
+                                    (data) => data.dish_id != item.dish_id
                                   )
                                 );
+                                handleDelete(item.dish_id);
                                 toast.success("Item Deleted Successfully");
                               } else {
                                 toast.error("Action Aborted");

@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
         dish_image: {
             type: DataTypes.STRING
         },
+        dish_price: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         dish_name: {
             type: DataTypes.STRING,
             allowNull: false
@@ -19,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         freezeTableName: true
-    })
+    });
     Dishes.removeAttribute('id');
-    return Dishes
+    return Dishes;
 
-}
+};
