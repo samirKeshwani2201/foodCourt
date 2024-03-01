@@ -14,17 +14,15 @@ const Category = db.category;
 // 1. create dishes
 
 const addDish = async (req, res) => {
-
     let info = {
-        dish_images: req.file.path,
+        dish_image: "https://davur.dexignzone.com/frontend/images/food-icon/1.png",
         dish_name: req.body.dish_name,
-        dish_price: req.body.price,
+        dish_price: req.body.dish_price,
         category_id: req.body.category_id,
-        dish_description: req.body.description,
+        dish_description: req.body.dish_description,
     };
     const dishes = await Dishes.create(info);
     res.status(200).send(dishes);
-
 };
 
 
@@ -39,7 +37,7 @@ const addDish = async (req, res) => {
 const getAllDishes = async (req, res) => {
     try {
         const dishes = await Dishes.findAll({
-            include: [Category] 
+            include: [Category]
         });
         res.status(200).send(dishes);
     } catch (error) {
@@ -76,20 +74,15 @@ const updateDishes = async (req, res) => {
 // 5. delete dish by id
 
 const deleteDish = async (req, res) => {
-
     let id = req.params.id;
-
     await Dishes.destroy({ where: { dish_id: id } });
-
     res.status(200).send(' Dishes is deleted !');
-
 };
 
 
 // 6. connect one to many relation Product and Reviews
 
 const getDishesByCategory = async (req, res) => {
-
     const id = req.params.category_id;
     const data = await Dishes.findOne({
         include: [{

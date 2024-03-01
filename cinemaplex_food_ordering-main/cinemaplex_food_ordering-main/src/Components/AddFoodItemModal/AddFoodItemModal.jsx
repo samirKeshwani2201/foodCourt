@@ -5,6 +5,7 @@ import "./AddFoodItemModal.css";
 import { useFormik } from "formik";
 import { addFoodModelSchema } from "./schemas/addFoodModelSchema";
 import toast from "react-hot-toast";
+import axios from "axios";
 const AddFoodItemModal = ({ closeModal, addFoodItem }) => {
   const addItemData = {
     itemName: "",
@@ -13,22 +14,36 @@ const AddFoodItemModal = ({ closeModal, addFoodItem }) => {
     itemCategory: "",
     itemDescription: "",
   };
+  const handleCreateDish = async (finalData) => {
+    const { category } = finalData;
+    const response = await axios.post("http://localhost:8080/api/admin/getCategoryByName", {
+      category_name: category
+    });
+    const categoryId = response.data.id;
+    const res = await axios.post("http://localhost:8080/api/admin/addDish", {
+      dish_name: finalData.dish_name,
+      dish_image: "https://davur.dexignzone.com/frontend/images/food-icon/1.png",
+      dish_price: finalData.dish_price,
+      category_id: categoryId,
+      dish_description: finalData.dish_description
+    });
+  };
   // addFoodItem("finalDataddd");
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       initialValues: addItemData,
       validationSchema: addFoodModelSchema,
       onSubmit: async (values, action) => {
-        const finalData = { 
+        const finalData = {
           category: values.itemCategory,
           dish_name: values.itemName,
           dish_price: values.itemPrice,
           dish_description: values.itemDescription,
-          dish_image: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
+          dish_image: "http://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
         };
         addFoodItem(finalData);
-        console.log("fckkk",finalData);
-
+        // console.log("fckkk", finalData);
+        handleCreateDish(finalData);
         closeModal(false);
         toast.success("Item Added Successfully");
         action.resetForm();
